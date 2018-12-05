@@ -30,5 +30,30 @@ def delete(request, pk):
     if request.method == 'POST':
         item.delete()
         return redirect('admin_console')
-    context = {"item": item,}
+    context = {"item": item, }
     return render(request, "products/confirmDelete.html", context)
+
+
+def confirmed(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST or None)
+        if form.is_valid():
+            form.delete()
+            return redirect('admin_console')
+    else:
+        return redirect('admin_console')
+
+
+def createRecord(request):
+    form = ProductForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('admin_console')
+    else:
+        print(form.errors)
+        form = ProductForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'products/createRecord.html', context)
+
